@@ -3,9 +3,12 @@ package pass
 import (
 	"reflect"
 	"runtime"
+	"sync"
 	"testing"
 	"unsafe"
 )
+
+var exit = runtime.Goexit
 
 // Now marks the test as being successful (PASS:) and stops its execution by
 // calling runtime.Goexit.
@@ -17,9 +20,16 @@ import (
 // goroutines.
 func Now(t *testing.T) {
 	rt := reflect.ValueOf(t).Elem()
+
+	rm := rt.FieldByName("mu")
+	rm = reflect.NewAt(rm.Type(), unsafe.Pointer(rm.UnsafeAddr()))
+	mu := rm.Interface().(*sync.RWMutex)
+	mu.Lock()
+	defer mu.Unlock()
+
 	rf := rt.FieldByName("finished")
 	rf = reflect.NewAt(rf.Type(), unsafe.Pointer(rf.UnsafeAddr())).Elem()
 	rf.SetBool(true)
 
-	runtime.Goexit()
+	exit()
 }
