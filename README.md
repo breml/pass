@@ -54,6 +54,11 @@ See [`example_test.go`](example_test.go) for a descriptive example.
 go get github.com/breml/pass
 ```
 
+## Proposal for the `testing` package
+
+I have created a proposal for the `testing` package to add a `(*testing.T).Pass`
+function. You can find the proposal in [go/68128](https://github.com/golang/go/issues/68128).
+
 ## Author
 
 Copyright 2024 by Lucas Bremgartner ([breml](https://github.com/breml))
